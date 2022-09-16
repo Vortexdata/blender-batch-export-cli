@@ -4,10 +4,11 @@
 # Pre-flight checks
 #
 
-REGEX=$1
-EXPDIR=$2
-EXPFORMAT=$3
-EXECSOURCE=$4
+SOURCEDIR=$1
+REGEX=$2
+EXPDIR=$3
+EXPFORMAT=$4
+EXECSOURCE=$5
 
 BEPY=$(realpath ./batchexport.py)
 
@@ -47,7 +48,7 @@ fi
 
 echo "Looking for Blender files using regex ${REGEX}.blend..."
 
-readarray -d '' blenderfiles < <(find ~+ . -type f -name "${REGEX}.blend" -print0)
+readarray -d '' blenderfiles < <(find ~+ "${SOURCEDIR}" -type f -name "${REGEX}.blend" -print0)
 
 
 if [ ${#blenderfiles[@]} -eq 0 ]; then
@@ -75,10 +76,20 @@ mkdir -p $EXPDIR
 
 echo "Exporting models..."
 
-export BBEC_EXPORT_PATH=$EXPDIR
 export BBEC_EXPORT_FORMAT=".${EXPFORMAT}"
 
 for bf in "${blenderfiles[@]}"; do
+	BF_DIRNAME=$(dirname "${bf}")
+	BF_EXPDIR=${EXPDIR}/${BF_DIRNAME/$SOURCEDIR/}
+	
+	echo "----"
+	echo $BF_EXPDIR
+	echo "----"
+	
+	export BBEC_EXPORT_PATH=$BF_EXPDIR
+	
+	mkdir -p "${BF_EXPDIR}"
+
 	if [ "${EXECSOURCE,,}" = "flatpak" ];
 	then
 		flatpak run org.blender.Blender -b "${bf}" --python $BEPY
