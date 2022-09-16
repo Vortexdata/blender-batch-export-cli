@@ -10,7 +10,8 @@ EXPDIR=$3
 EXPFORMAT=$4
 EXECSOURCE=$5
 
-BEPY=$(realpath ./batchexport.py)
+BEPY="$(find ~+ -type f -name batchexport.py)"
+echo $BEPY
 VALID_EXPFORMATS=("fbx" "obj" "x3d" "gltf")
 
 if [ "$SOURCEDIR" = "" ];
@@ -18,6 +19,7 @@ then
 	echo "Error: No source directory specified!"
 	exit 1
 fi
+SOURCEDIR="$(realpath $SOURCEDIR)"
 
 if [ "$REGEX" = "" ];
 then
@@ -30,6 +32,8 @@ then
 	echo "Error: No export directory specified!"
 	exit 1
 fi
+EXPDIR="$(realpath $EXPDIR)"
+
 
 if [[ ! " ${VALID_EXPFORMATS[*]} " =~ " ${EXPFORMAT,,} " ]]; then
 	echo "Error: Unknown export format ${EXPFORMAT}! Valid formats are:"
@@ -81,25 +85,29 @@ done
 #
 
 echo "Ensuring export directory existence..."
-mkdir -p $EXPDIR
+mkdir -p "${EXPDIR}"
 
 echo "Exporting models..."
 
 export BBEC_EXPORT_FORMAT="${EXPFORMAT}"
 
 for bf in "${blenderfiles[@]}"; do
-	BF_DIRNAME=$(dirname "${bf}")
+	BF_DIRNAME="$(dirname "${bf}")"
 	BF_EXPDIR=${EXPDIR}/${BF_DIRNAME/$SOURCEDIR/}
 	
-	export BBEC_EXPORT_PATH=$BF_EXPDIR
+	echo "---"
+	echo "${BF_EXPDIR}"
+	echo "---"
+	
+	export BBEC_EXPORT_PATH="${BF_EXPDIR}"
 	
 	mkdir -p "${BF_EXPDIR}"
 
 	if [ "${EXECSOURCE,,}" = "flatpak" ];
 	then
-		flatpak run org.blender.Blender -b "${bf}" --python $BEPY
+		flatpak run org.blender.Blender -b "${bf}" --python "${BEPY}"
 	else
-    		blender -b "${bf}" --python $BEPY
+    		blender -b "${bf}" --python "${BEPY}"
 	fi
 done
 
