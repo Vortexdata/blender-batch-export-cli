@@ -23,6 +23,7 @@
     <li><a href="#requirements">Requirements</a></li>
     <li><a href="#installation">Installation</a></li>
     <li><a href="#usage">Usage</a></li>
+    <li><a href="#installation">Known issues</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
@@ -60,6 +61,20 @@ This script should run on most Linux distros. You'll need to have access to Bash
 - Export Directory: Directory meshes are exported to.
 - Export Format: Container type of exports (eg. FBX, OBJ, etc.).
 - Executable source: If unspecified, script will attempt to run blender with `blender` command. If you are using Blender's Flatpak version, this will not work. Instead, write `flatpak` at the end of the command.
+
+
+## Known issues
+
+### BlenderGIS incompatibility
+
+During testing, the [BlenderGIS](https://github.com/domlysz/BlenderGIS) addon caused Blender to exit unexpectedly, stopping the export process. Temporarely disable the addon if you wish to use this script.
+
+
+### Duplicate file detection
+
+As of 1.0.0, filtered Blender files are indexed two times, one time with aboslute path and another time with relative path. It not a bug, it's a feature... kind of. When using the Flatpak executable, it will not understand relative paths, so only the aboslute ones are processed. When using the native blender command, the relative paths will also be processed.
+
+This behaviour will be optimized in the future.
 
 
 ## License
