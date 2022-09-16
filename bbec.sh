@@ -11,6 +11,13 @@ EXPFORMAT=$4
 EXECSOURCE=$5
 
 BEPY=$(realpath ./batchexport.py)
+VALID_EXPFORMATS=("fbx" "obj" "x3d" "gltf")
+
+if [ "$SOURCEDIR" = "" ];
+then
+	echo "Error: No source directory specified!"
+	exit 1
+fi
 
 if [ "$REGEX" = "" ];
 then
@@ -24,9 +31,11 @@ then
 	exit 1
 fi
 
-if [ "$EXPFORMAT" = "" ];
-then
-	echo "Error: No export format specified (e.g. fbx, obj, ...)!"
+if [[ ! " ${VALID_EXPFORMATS[*]} " =~ " ${EXPFORMAT,,} " ]]; then
+	echo "Error: Unknown export format ${EXPFORMAT}! Valid formats are:"
+	for f in "${VALID_EXPFORMATS[@]}"; do
+		echo $f
+	done
 	exit 1
 fi
 
@@ -76,15 +85,11 @@ mkdir -p $EXPDIR
 
 echo "Exporting models..."
 
-export BBEC_EXPORT_FORMAT=".${EXPFORMAT}"
+export BBEC_EXPORT_FORMAT="${EXPFORMAT}"
 
 for bf in "${blenderfiles[@]}"; do
 	BF_DIRNAME=$(dirname "${bf}")
 	BF_EXPDIR=${EXPDIR}/${BF_DIRNAME/$SOURCEDIR/}
-	
-	echo "----"
-	echo $BF_EXPDIR
-	echo "----"
 	
 	export BBEC_EXPORT_PATH=$BF_EXPDIR
 	

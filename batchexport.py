@@ -17,7 +17,17 @@ def run():
 		ob.select_set(True)
 
 		if ob.type == 'MESH':
-			bpy.ops.export_scene.obj(filepath=os.path.join(os.environ['BBEC_EXPORT_PATH'], os.path.splitext(filename)[0] + "_" + ob.name + os.environ['BBEC_EXPORT_FORMAT']), use_selection=True)
+			fp=os.path.join(os.environ['BBEC_EXPORT_PATH'], os.path.splitext(filename)[0] + "_" + ob.name + "." + os.environ['BBEC_EXPORT_FORMAT'])
+			if os.environ['BBEC_EXPORT_FORMAT'].lower() == 'fbx':
+				bpy.ops.export_scene.fbx(filepath=fp, use_selection=True)
+			elif os.environ['BBEC_EXPORT_FORMAT'].lower() == 'obj':
+				bpy.ops.export_scene.obj(filepath=fp, use_selection=True)
+			elif os.environ['BBEC_EXPORT_FORMAT'].lower() == 'gltf':
+				bpy.ops.export_scene.gltf(filepath=fp, use_selection=True)
+			elif os.environ['BBEC_EXPORT_FORMAT'].lower() == 'x3d':
+				bpy.ops.export_scene.x3d(filepath=fp, use_selection=True)
+			else:
+				print("Unknown export format '" + os.environ['BBEC_EXPORT_FORMAT'] + "'!")
 
 		ob.select_set(False)
 
