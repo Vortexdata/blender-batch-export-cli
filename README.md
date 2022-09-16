@@ -2,7 +2,7 @@
 
 <br />
 <div align="center">
-  <img src="images/logo.png" alt="Logo" width="80" height="80">
+  <img src="images/logo.png" alt="Logo" width="120" height="120">
   <h3 align="center">B-BEC</h3>
 
   <p align="center">
