@@ -12,11 +12,11 @@ def parse_args():
 	else:
 		argv = sys.argv[sys.argv.index("--") + 1:]
 	
-	parser = argparse.ArgumentParser(description='Olle bled')
-	parser.add_argument('-f', '--format', dest="format", help='Export format', required=True)
-	parser.add_argument('-s', '--source', dest="source", help='Source folder', required=True)
-	parser.add_argument('-o', '--output', dest="output", help='Output folder', required=True)
-	parser.add_argument('--reset-location', dest="rl", help='Reset object location', action='store_true')
+	parser = argparse.ArgumentParser(description='Batch export Blender files and objects contained therein.')
+	parser.add_argument('-f', '--format', dest="format", help='Desired format of the exported objects (fbx, obj, x3d, gltf).', required=True)
+	parser.add_argument('-s', '--sourcedir', dest="source", help='Path to directory containing source \'.blend\' files.', required=True)
+	parser.add_argument('-o', '--outputdir', dest="output", help='Path to directory exported objects will be stored in.', required=True)
+	parser.add_argument('--reset-location', dest="rl", help='Each objects world location will be set to X=0 / Y=0 / Z=0, removing any world offset from the object export.', action='store_true')
 
 	return parser.parse_args(argv)
 def run():

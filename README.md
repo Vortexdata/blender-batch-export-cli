@@ -6,7 +6,7 @@
   <h3 align="center">B-BEC</h3>
 
   <p align="center">
-    Batch export multiple blender files and objects contained therein.
+    Batch export Blender files and objects contained therein.
     <br />
     <br />
     <a href="/issues/new?template=bug_report.md">Report Bug</a>
@@ -20,6 +20,7 @@
 <details>
   <summary>Table of Contents</summary>
   <ol>
+	<li><a href="#demo">Demo</a></li>
     <li><a href="#requirements">Requirements</a></li>
     <li><a href="#installation">Installation</a></li>
     <li><a href="#usage">Usage</a></li>
@@ -31,56 +32,53 @@
 
 ## Demo
 
-https://user-images.githubusercontent.com/40140669/190535567-fbd23168-2e8f-4572-be35-c9810170e90b.mp4
+<WIP>
 
 
 ## Requirements
 
-This script should run on most Linux distros. You'll need to have access to Bash (duh).
-
+* [Python3](https://www.python.org/downloads/)
+* [Blender 3.2](https://www.blender.org/download/)
 
 
 ## Installation
 
-* Download the latest release zip.
-* Extract the archive contents into a folder.
-* Allow execution of scripts (eg. with `chmod 700 fcomb-interactive.sh`) 
-
+* Make sure all requirements are met.
+* Download the [latest release](https://github.com/Vortexdata/blender-batch-export-cli/releases/latest).
+* Extract the `bbec.py` from archive.
 
 ## Usage
 
 ### Running the script
+
 ```bash
-# Run the script
-./recursive_export.sh <filename> <export directory> <export format> <executable source>
+# Default installation
+blender -b --python <path to 'bbec.py'> -- <B-BEC args>
+
+# Flatpak version of Blender
+flatpak run org.blender.Blender -b --python <absolute (!) path to 'bbec.py'> -- <B-BEC args (paths must be absolute!)>
 ```
+
+> As the Flatpak version of Blender is running within a sandbox, Blender will be unable to find relative paths. Therefore, you must use absolute paths at all times.
+
 
 ### CLI Arguments
 
-- Filename: Filter for filenames to include (eg. *.blend to export all, "myfile.blend" to only export "myfile.blend")
-- Export Directory: Directory meshes are exported to.
-- Export Format: Container type of exports (eg. FBX, OBJ, etc.).
-- Executable source: If unspecified, script will attempt to run blender with `blender` command. If you are using Blender's Flatpak version, this will not work. Instead, write `flatpak` at the end of the command.
-
+* **-f** / **--format**: Desired format of the exported objects (fbx, obj, x3d, gltf).
+* **-s** / **--sourcedir**: Path to directory containing source `.blend` files.
+* **-o** / **--outputdir**: Path to directory exported objects will be stored in.
+* **-rl** / **--reset-location**: Each objects world location will be set to X=0 / Y=0 / Z=0, removing any world offset from the object export. This can be useful if exported objects are later re-imported in other programs (e.g. Unreal Engine, Unity, Maya, ...).
 
 ## Known issues
 
 ### BlenderGIS incompatibility
 
-During testing, the [BlenderGIS](https://github.com/domlysz/BlenderGIS) addon caused Blender to exit unexpectedly, stopping the export process. Temporarely disable the addon if you wish to use this script.
-
-
-### Duplicate file detection
-
-As of 1.0.0, filtered Blender files are indexed two times, one time with aboslute path and another time with relative path. It not a bug, it's a feature... kind of. When using the Flatpak executable, it will not understand relative paths, so only the aboslute ones are processed. When using the native blender command, the relative paths will also be processed.
-
-This behaviour will be optimized in the future.
+During testing, the [BlenderGIS](https://github.com/domlysz/BlenderGIS) addon caused Blender to exit unexpectedly, stopping the export process. Disable the addon if you wish to use this script.
 
 
 ## License
 
 Distributed under the GNU General Public License v3.0. See `LICENSE.txt` for more information.
-
 
 
 ## Acknowledgments
